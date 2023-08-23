@@ -21,6 +21,6 @@ app.listen(port, ()=> {
     console.log(`iNotebook backend Listening on port ${port}`)
 })
 
-app.use("/", (req, res) => {
+app.get("/", (req, res) => {
     res.send("Hello to iNotebook API");
 });

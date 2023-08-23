@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Signup = (props) => {
+    const host = "https://inotebook-app-01227d5a45f6.herokuapp.com"
     const [credentials, setCredentials] = useState({ name: "", email: "", password: "", cpassword: "" });
     let navigate = useNavigate();
 
@@ -9,7 +10,7 @@ const Signup = (props) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const { name, email, password } = credentials;
-        const response = await fetch("http://localhost:5000/api/auth/createuser", {
+        const response = await fetch(`${host}/api/auth/createuser`, {
             method: "POST",
             headers: {
                 'content-type': 'application/json'
@@ -20,8 +21,9 @@ const Signup = (props) => {
         console.log(json);
         if (json.success) {
             // Save the auth token and redirect
-            localStorage.setItem('token', json.authToken)
+            localStorage.setItem('token', json.authToken);
             navigate("/");
+            handleSignUp();
             props.showAlert("Account created successfully", "success")
 
         } else {
@@ -31,6 +33,18 @@ const Signup = (props) => {
 
     const onChange = (e) => {
         setCredentials({ ...credentials, [e.target.name]: e.target.value })
+    }
+
+    const handleSignUp = async () => {
+        var token = localStorage.getItem('token');
+        const response = await fetch(`${host}/api/auth/getuser`, {
+            method: "POST",
+            headers: {
+                "auth-token": token
+            }
+        });
+        const result = await response.json();
+        localStorage.setItem('userData', JSON.stringify(result));
     }
 
     return (

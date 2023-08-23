@@ -8,9 +8,6 @@ const Navbar = () => {
     let navigate = useNavigate();
 
     const userDetails = localStorage.getItem('userData')
-      
-     
-
    
     const handleLogout = () => {
         localStorage.removeItem('token');

@@ -4,6 +4,15 @@ import noteContext from '../context/notes/noteContext'
 import NoteItem from "./NoteItem";
 import AddNote from "./AddNote";
 
+const getRandomColor = () => {
+    const letters = "0123456789ABCDEF";
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;  
+}
+
 const Notes = (props) => {
     const context = useContext(noteContext);
     const { notes, getNotes, editNote} = context;
@@ -35,6 +44,16 @@ const Notes = (props) => {
     const onChange = (e) => {
         setNote({...note, [e.target.name]: e.target.value})
     }
+
+    const [noteColors, setNoteColors] = useState({});
+
+    const generateColorForNewNote = (noteId) => {
+        if (!noteColors[noteId]) {
+            const newNoteColors = { ...noteColors };
+            newNoteColors[noteId] = getRandomColor();
+            setNoteColors(newNoteColors);
+        }
+    };
 
     return (
         <>
@@ -80,7 +99,8 @@ const Notes = (props) => {
                 </div>
                 <div className="row">
                     {notes.map((note) => {
-                        return <NoteItem key={note._id} updateNote={updateNote} showAlert={props.showAlert} note={note} />
+                         generateColorForNewNote(note._id);
+                        return <NoteItem key={note._id} updateNote={updateNote} showAlert={props.showAlert} note={note} color={noteColors[note._id]} />
                     })}
                 </div>
             </div>
